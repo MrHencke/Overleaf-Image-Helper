@@ -1,9 +1,13 @@
 {
 	"manifest_version": 2,
 	"name": "Overleaf Image  For Firefox",
-	"version": "1.0",
+	"version": "1.1",
 	"description": "This extension allows you to paste images from your clipboard directly into Overleaf.",
-
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{2e7913dc-5d8e-4b70-9208-f303830ca339}"
+		}
+	},
 	"content_scripts": [
 		{
 			"matches": ["https://www.overleaf.com/project/*"],

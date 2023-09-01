@@ -1,0 +1,37 @@
+name: Pack Firefox Addon
+
+on:
+  push:
+    branches:
+      - master
+    paths: 
+      - 'src/paste.js'
+      - 'manifest.json'
+  
+jobs:
+  publish:
+    name: Publish to Firefox Addons
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Build Project"
+        id: build
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: build
+          source: src
+          filename: "{name}-{version}.xpi"
+
+
+      - name: "Upload addon to AMO"
+        id: sign
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: sign
+          source: ${{ steps.build.outputs.target }}
+          channel: listed
+          apiKey: ${{ secrets.FIREFOX_API_KEY }}
+          apiSecret: ${{ secrets.FIREFOX_API_SECRET }}
+          timeout: 900000
