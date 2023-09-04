@@ -1,0 +1,44 @@
+import { generateAssetsFolder, getFigureText, getOptions } from '../common/util/optionsUtils.js';
+import { uploadImage } from '../common/util/api.js';
+import { cm6, cmInsert, cursorPos } from '../common/util/windowUtils.js';
+import { sha256FromImage } from '../common/util/shaUtils.js';
+
+export const injectPasteEventListener = () => {
+
+const editor = document.querySelector('.editor');
+
+editor!.addEventListener('paste', async (e) => {
+	const images = getClipboardImages(e);
+	const options = await getOptions();
+	for (const image of images) {
+		const hash = await sha256FromImage(image);
+		await uploadImage(image, hash);
+		const insertText = getFigureText(hash, options);
+		const cPos = cursorPos()
+		cmInsert(cPos, insertText);
+		if(options.copyNameToClipboard)
+			navigator.clipboard.writeText(hash)
+	}
+})}
+
+const getClipboardImages = (e: Event): File[] => {
+	const event = e as ClipboardEvent;
+	if (!event.clipboardData) return [];
+	const items = Array.from(event.clipboardData.items);
+	return items.flatMap((item) => {
+		const file = item.getAsFile();
+		return item.type.startsWith('image') && file ? file : [];
+	});
+};
+
+(() => {
+	try {
+		const retry = setInterval(() => {
+			if (!cm6()) return;
+			clearInterval(retry);
+			injectPasteEventListener()
+		}, 500);
+	} catch (e) {
+		console.log("Failed to inject script", e);
+	}
+})();

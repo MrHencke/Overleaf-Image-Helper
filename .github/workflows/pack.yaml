@@ -1,12 +1,11 @@
-name: Pack Firefox Addon
+name: Pack and Publish Firefox Addon
 
 on:
   push:
     branches:
       - master
     paths: 
-      - 'src/paste.js'
-      - 'manifest.json'
+      - 'src/'
   
 jobs:
   publish:
@@ -16,22 +15,39 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
+      - name: "Install Node.js"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      
+      - name: "Install Dependencies"
+        run: yarn install --immutable
+
       - name: "Build Project"
-        id: build
+        id: yarn-build
+        run: yarn run build
+
+      - name: "Build Project as Firefox Addon"
+        id: ext-build
         uses: kewisch/action-web-ext@v1
         with:
           cmd: build
-          source: src
+          source: dist
           filename: "{name}-{version}.xpi"
 
+      - name: "Zip Source Files"
+        id: zip
+        uses: vimtor/action-zip@v1
+        with:
+          files: src/ package.json tsconfig.json vite.config.ts yarn.lock
+          dest: source.zip
 
       - name: "Upload addon to AMO"
+        uses: yayuyokitano/firefox-addon@v0.0.3-alpha
         id: sign
-        uses: kewisch/action-web-ext@v1
         with:
-          cmd: sign
-          source: ${{ steps.build.outputs.target }}
-          channel: listed
-          apiKey: ${{ secrets.FIREFOX_API_KEY }}
-          apiSecret: ${{ secrets.FIREFOX_API_SECRET }}
-          timeout: 900000
+          api_key: ${{ secrets.FIREFOX_API_KEY }}
+          api_secret: ${{ secrets.FIREFOX_API_SECRET }}
+          guid: '{2e7913dc-5d8e-4b70-9208-f303830ca339}'
+          xpi_path: ${{ steps.ext-build.outputs.target }}
+          src_path: source.zip 

@@ -1,0 +1,32 @@
+html,
+body {
+	width: 600px;
+	height: 600px;
+	overflow-y: hidden !important;
+}
+.popup-container {
+	height: inherit !important;
+}
+
+h2 {
+	text-align: center !important;
+}
+
+.vcenter {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.nmb {
+	margin-bottom: 2px !important;
+}
+
+.nmt {
+	margin-top: 0px !important;
+}
+
+.form-hint {
+	font-size: 11px;
+	margin-bottom: 12px;
+}
