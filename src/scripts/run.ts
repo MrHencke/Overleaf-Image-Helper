@@ -16,8 +16,11 @@ editor!.addEventListener('paste', async (e) => {
 		const insertText = getFigureText(hash, options);
 		const cPos = cursorPos()
 		cmInsert(cPos, insertText);
-		if(options.copyNameToClipboard)
-			navigator.clipboard.writeText(hash)
+		if(options.copyNameToClipboard){
+			const matches = insertText.match(/(?<=\\label\{)(.*?)(?=\})/)
+			if(matches.length > 0)
+				navigator.clipboard.writeText(matches[0]);
+		}
 	}
 })}
 
