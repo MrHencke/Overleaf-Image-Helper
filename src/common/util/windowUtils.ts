@@ -9,7 +9,7 @@ export const cm6 = () => wrappedWindow()?._ide?.editorManager?.$scope?.editor?.s
 
 export const findEntityByPath = (assetsPath: string) => wrappedWindow()?._ide?.fileTreeManager?.findEntityByPath(assetsPath)
 
-export const createFolder = (assetsPath: string, path: string = '/') => wrappedWindow()?._ide?.fileTreeManager?.createFolder(assetsPath, path)
+export const createFolder = async (assetsPath: string, path: string = '/') => wrappedWindow()?._ide?.fileTreeManager?.createFolder(assetsPath, path)
 
 export const cursorPos = () => cm6()?.view?.state?.selection?.ranges[0]?.from
 

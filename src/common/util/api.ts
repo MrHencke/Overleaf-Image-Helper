@@ -1,9 +1,12 @@
 import axios from "axios";
-import { findEntityByPath, csrf } from "./windowUtils.js";
+import { getOptions, safelyGetFolder } from "./optionsUtils";
+import { csrf } from "./windowUtils";
 
 export const uploadImage = async (imageBlob: File, hash: string) => {
+    const options = await getOptions()
+    const folderId = await safelyGetFolder(options.assetsFolder)
     //@ts-ignore
-    const url = `https://${document.location.host}${document.location.pathname}/upload?folder_id=${findEntityByPath('assets').id}&_csrf=${csrf()}`;
+    const url = `https://${document.location.host}${document.location.pathname}/upload?folder_id=${folderId}&_csrf=${csrf()}`;
     let formData = new FormData();
     formData.append('qqfile', imageBlob, hash + '.png');
     formData.append('relativePath', '');

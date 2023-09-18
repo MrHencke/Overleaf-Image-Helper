@@ -1,7 +1,9 @@
-import { generateAssetsFolder, getFigureText, getOptions } from '../common/util/optionsUtils.js';
+import { checkFirstRun, getFigureText, getOptions } from '../common/util/optionsUtils.js';
 import { uploadImage } from '../common/util/api.js';
 import { cm6, cmInsert, cursorPos } from '../common/util/windowUtils.js';
 import { sha256FromImage } from '../common/util/shaUtils.js';
+
+checkFirstRun();
 
 export const injectPasteEventListener = () => {
 
