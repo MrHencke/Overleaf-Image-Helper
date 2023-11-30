@@ -6,10 +6,10 @@ export interface IFigureTextOptions {
 	copyNameToClipboard: boolean,
 }
 
-const defaultTemplate = `\\begin{figure}[h!]
+const defaultTemplate = `\\begin{figure}[H]
 	\\centering
 	\\includegraphics[width=0.66\\textwidth]{assets/PICTURENAME.png}
-	\\caption{Caption}
+	\\caption{}
 	\\label{fig:PICTURENAME}
 \\end{figure}`;
 

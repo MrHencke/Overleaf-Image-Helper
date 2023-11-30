@@ -10,21 +10,22 @@ export const injectPasteEventListener = () => {
 const editor = document.querySelector('.editor');
 
 editor!.addEventListener('paste', async (e) => {
+	e.stopPropagation();
 	const images = getClipboardImages(e);
 	const options = await getOptions();
 	for (const image of images) {
 		const hash = await sha256FromImage(image);
-		await uploadImage(image, hash);
 		const insertText = getFigureText(hash, options);
 		const cPos = cursorPos()
 		cmInsert(cPos, insertText);
+		await uploadImage(image, hash);
 		if(options.copyNameToClipboard){
 			const matches = insertText.match(/(?<=\\label\{)(.*?)(?=\})/)
 			if(matches.length > 0)
 				navigator.clipboard.writeText(matches[0]);
 		}
 	}
-})}
+}, true)}
 
 const getClipboardImages = (e: Event): File[] => {
 	const event = e as ClipboardEvent;
